@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
@@ -9,25 +9,80 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [check, setCheck] = useState(false);
-  const [charCount1, setCharCount1] = useState(0);
-  const [charCount2, setCharCount2] = useState(0);
 
-  useEffect(() => {
-    setCharCount1(word1.replace(/\s/g, '').length);
-    setCharCount2(word2.replace(/\s/g, '').length);
-  }, [word1, word2]);
+  const countChars = (str) => {
+    let count = 0;
+    for(let i = 0; i < str.length; i++){
+      if(str[i] !== " "){
+        count++;
+      }
+    }
+    return count;
+  }
+
+  const charCount1 = countChars(word1);
+  const charCount2 = countChars(word2);
+
+  const removeSpace = (str) => {
+    let result = "";
+    for(let i = 0; i < str.length; i++){
+      if(str[i] !== " "){
+        result += str[i].toLowerCase();
+      }
+    }
+    return result;
+  }
+
+  const bubbleSort = (str) => {
+    let chars = [];
+    for(let i = 0; i < str.length; i++){
+      chars[i] = str[i];
+    }
+
+    for(let i = 0; i < chars.length - 1; i++){
+      for(let j = 0; j < chars.length - i - 1; j++){
+        if(chars[j] > chars[j + 1]){
+          let temp = chars[j];
+          chars[j] = chars[j + 1];
+          chars[j + 1] = temp;
+        }
+      }
+    }
+
+    let result = "";
+    for(let i = 0; i < chars.length; i++){
+      result += chars[i];
+    }
+    return result;
+  }
 
   const anagram = (a, b) => {
-    const str1 = a.replace(/\s/g, "").toLowerCase();
-    const str2 = b.replace(/\s/g, "").toLowerCase();
+    const str1 = removeSpace(a);
+    const str2 = removeSpace(b);
 
     if(str1.length !== str2.length){
       return false;
     }
-    const sortStr1 = str1.split("").sort().join("");
-    const sortStr2 = str2.split("").sort().join("");
+    const sortStr1 = bubbleSort(str1);
+    const sortStr2 = bubbleSort(str2);
 
     return sortStr1 === sortStr2;
+  }
+
+  const checkSymbol = (str) => {
+    for(let i = 0; i < str.length; i++){
+      const char  = str[i];
+      const code = char.charCodeAt(0);
+
+      const isUppercase = code >= 65 && code <= 90;
+      const isLowercase = code >= 97 && code <= 122;
+      const isSpace = char === " ";
+
+      if(!isUppercase && !isLowercase && !isSpace){
+        return false;
+      }
+    }
+    return true;
   }
 
   const validate = (e) => {
@@ -42,8 +97,7 @@ function App() {
       return;
     }
 
-    const re = /^[a-zA-Z\s]+$/;
-    if(!re.test(word1) || !re.test(word2)){
+    if(!checkSymbol(word1) || !checkSymbol(word2)){
       setError("Hanya boleh Huruf dan Spasi!");
       setCheck(false);
       return;
@@ -77,7 +131,7 @@ function App() {
     <div className="container">
       <div className="card">
         <h1>Anagram Checker</h1>
-        <p>Cek apakah kedua kata adalah Anagram</p>
+        <p className='desc'>Cek apakah kedua kata adalah Anagram</p>
 
         <form onSubmit={validate}>
           <div className="input-group">
@@ -158,7 +212,7 @@ function App() {
             <strong>Contoh Anagram:</strong>
             <ul>
               <li>"muka" dan "kamu"</li>
-              <li>"cafe" dan "face"</li>
+              <li>"ibu" dan "ubi"</li>
               <li>"kasur" dan "rusak"</li>
             </ul>
           </div>
