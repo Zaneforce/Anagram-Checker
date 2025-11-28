@@ -39,7 +39,7 @@ const removeSpaces = (str) => {
   return result
 }
 
-// 3. Bubble sort manual
+// 3. Bubble sort
 const sortString = (str) => {
   let chars = []
   for (let i = 0; i < str.length; i++) {
@@ -63,7 +63,7 @@ const sortString = (str) => {
   return result
 }
 
-// 4. Validasi input manual
+// 4. Validasi input 
 const isLettersAndSpacesOnly = (str) => {
   for (let i = 0; i < str.length; i++) {
     const charCode = str[i].charCodeAt(0)
